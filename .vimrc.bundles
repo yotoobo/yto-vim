@@ -1,0 +1,25 @@
+" Environment {
+
+" Basics {
+  set nocompatible
+" }
+
+" Setup Bundle Support {
+  filetype off
+  set rtp+=~/.vim/bundle/Vundle.vim
+  call vundle#begin()
+
+    " Plugins {
+      Plugin 'gmarik/vundle'
+
+        " General {
+          Plugin 'scrooloose/nerdtree'
+          Plugin 'altercation/vim-colors-solarized'
+        " }
+
+    " }
+
+
+  call vundle#end()
+  filetype plugin indent on
+" }
