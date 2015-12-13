@@ -97,7 +97,24 @@
 
 " Vim UI {
     
-    set background=dark
+    if !has('gui_running')
+      set background=dark
+      set t_Co=256
+    else
+      set background=light
+      " 禁止显示滚动条
+      set guioptions-=l
+      set guioptions-=L
+      set guioptions-=r
+      set guioptions-=R
+      " 禁止显示菜单和工具条
+      set guioptions-=m
+      set guioptions-=T
+    endif
+    
+    " 禁止光标闪烁
+    set gcr=a:block-blinkon0
+    
 
     if !exists('g:oerride_spf13_bundles') && filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
         let g:solarized_termcolors=256
@@ -134,7 +151,8 @@
 
 
 " Formatting {
-
+    
+    " normal
     set nowrap
     set autoindent
     set expandtab
@@ -144,6 +162,15 @@
     set nojoinspaces
     set splitright
     set splitbelow
+
+    " for python
+    let python_highlight_all = 1
+    au FileType python set tabstop=4 
+    au FileType python set softtabstop=4 
+    au FileType python set shiftwidth=4
+    au FileType python set textwidth=79
+    au FileType python set expandtab
+    au FileType python set autoindent
 
 " }
 
@@ -162,6 +189,11 @@
     inoremap <c-h> <left>
     inoremap <c-l> <right>
 
+    map <leader>w :w<CR>
+    map <leader>x :x<CR>
+    map <leader>q :q<CR>
+    map <leader>qq :q!<CR>
+    map! jk <esc>
 
 " Plugins {
 
