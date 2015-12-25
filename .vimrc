@@ -1,11 +1,3 @@
-" 此vimrc是在<spf13>的基础上进行修改的.
-" 为什么不直接用<spf13>?
-" 因为它实在太强大了,有许多功能我都没有用到.
-" 所以,只好弄了份简易版.
-" 我主要是用来写shell和python的,所以如果你需要其他的支持,请去找<spf13>吧!
-" 
-
-
 " Environment {
 
     " Identify platform {
@@ -56,9 +48,9 @@
     scriptencoding utf-8
 
     if has('clipboard')
-      if has('unnamedplus')
+      if has('unnamedplus') " When possible use + register for copy-paste
         set clipboard=unnamed,unnamedplus
-      else
+      else  " On mac and Windows, use * register for copy-paste
         set clipboard=unnamed
       endif
     endif
@@ -91,6 +83,11 @@
       set undolevels=1000
       set undoreload=1000
     endif
+
+    set encoding=utf-8
+    set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+
+    set t_ti= t_te=  " 退出后显示文件内容
 
 " }
 
@@ -128,6 +125,7 @@
     set showmode
 
     set cursorline
+    set cursorcolumn
 
     highlight clear SignColumn
     highlight clear LineNr
@@ -147,6 +145,10 @@
     set ignorecase
     set winminheight=0
     
+    " 分割窗口
+    set splitbelow
+    set splitright
+
 " }
 
 
@@ -162,6 +164,41 @@
     set nojoinspaces
     set splitright
     set splitbelow
+
+    " 创建新文件自动添加标题 
+    autocmd BufNewfile *.sh,*.py,*.php,*.rb,*.pl exec ":call SetTitle()"
+    function SetTitle()
+      if &filetype == 'sh'
+        call setline(1,"\#!/bin/bash")
+        call append(line("."),"")
+    
+      elseif &filetype == 'python'
+        call setline(1,"\#!/usr/bin/env python")
+        call append(line("."),"# -*- coding: utf-8 -*-")
+        call append(line(".")+1,"")
+      
+      elseif &filetype == 'ruby'
+        call setline(1,"#!/usr/bin/env ruby")
+        call append(line("."),"# encoding: utf-8")
+        call append(line(".")+1, "")
+    
+      elseif &filetype == 'php'
+        call setline(1,"\<?php")
+        call append(line("."),"")
+        call append(line(".")+1,"\?>")
+    
+      elseif &filetype == 'pl'
+        call setline(1,"\#!/usr/bin/perl")
+        call append(line("."),"")
+        call append(line(".")+1,"\?>")
+    
+      else
+        call setline(1,"")
+           
+    endif
+    
+    endfunction
+    autocmd BufNewfile * normal G "自动定位到新文件末行
 
     " for python
     let python_highlight_all = 1
@@ -194,6 +231,49 @@
     map <leader>q :q<CR>
     map <leader>qq :q!<CR>
     map! jk <esc>
+
+    "split navigations
+    nnoremap <c-j> <c-w>j
+    nnoremap <c-k> <c-w>k
+    nnoremap <c-l> <c-w>l
+    nnoremap <c-h> <c-w>h
+    
+    " 大小写转换
+    nnoremap <c-u> bgUee
+    inoremap <c-u> <esc>bgUeea
+
+    " tab
+    nnoremap <c-t> :tabnew<CR>
+    inoremap <C-t> <Esc>:tabnew<CR>
+    noremap <leader>1 1gt
+    noremap <leader>2 2gt
+    noremap <leader>3 3gt
+    noremap <leader>4 4gt
+    noremap <leader>5 5gt
+    noremap <leader>6 6gt
+    noremap <leader>7 7gt
+    noremap <leader>8 8gt
+    noremap <leader>9 9gt
+    noremap <leader>0 :tablast<cr>
+    let g:last_active_tab = 1
+    nnoremap <silent> <leader>tt :execute 'tabnext ' . g:last_active_tab<cr>
+    vnoremap <silent> <leader>tt :execute 'tabnext ' . g:last_active_tab<cr>
+    "autocmd TabLeave * let g:last_active_tab = tabpagenr()
+
+    " <F3> 打开/关闭行号
+    function! HideNumber()
+      if(&relativenumber == &number)
+        set relativenumber! number!
+      elseif(&number)
+        set number!
+      else
+        set relativenumber!
+      endif
+      set number?
+    endfunc
+    nnoremap <F3> :call HideNumber()<CR>
+
+    map <F5> :w<cr>:!python %<cr>
 
 " Plugins {
 
