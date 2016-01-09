@@ -11,11 +11,91 @@
 
     " Plugins {
       Plugin 'gmarik/vundle'
+      
+      " inspired by spf13, 自定义需要的插件集合
+      if !exists('g:bundle_groups')
+        " more options: ['json', 'nginx', 'golang', 'ruby', 'less', 'json', ]
+        let g:bundle_groups=['python', 'markdown', ]
+      endif
 
-        " General {
-          Plugin 'scrooloose/nerdtree'
-          Plugin 'altercation/vim-colors-solarized'
-        " }
+      " General {
+        Plugin 'scrooloose/nerdtree'
+          map <F3> :NERDTreeToggle<CR>
+          map <C-e> <plug>NERDTreeTabsToggle<CR>
+          map <leader>e :NERDTreeFind<CR>
+          nmap <leader>nt :NERDTreeFind<CR>
+
+          let NERDTreeShowBookmarks=1
+          let NERDTreeIgnore=['\.py[cd]$','\~$','\.swo$','\.swp$','^\.git$','^\.hg$','^\.svn$','\.bzr$']
+          let NERDTreeChDirMode=0
+          let NERDTreeQuitOnOpen=1
+          let NERDTreeMouseMode=2
+          let NERDTreeShowHidden=1
+          let NERDTreeKeepTreeInNewTab=1
+          let g:nerdtree_tabs_open_on_gui_startup=0
+
+        Plugin 'altercation/vim-colors-solarized'
+          let g:solarized_termtrans = 1
+          let g:solarized_termcolors = 256
+          let g:solarized_contrast = "normal"
+          let g:solarized_visibility = "normal"
+
+        Plugin 'Lokaltog/vim-powerline'
+          set laststatus=2
+          set t_Co=256
+          let g:Powline_theme='solarized256'
+          let g:Powerline_colorscheme = 'solarized256'
+          let g:Powline_symbols='fancy'
+          let g:Powerline_stl_path_style = 'full'
+          let g:Powerline_cache_enabled = 0
+
+        Plugin 'Lokaltog/vim-easymotion'
+          let g:EasyMotion_do_mapping = 0
+          let g:easymotion_smartcase = 1
+          nmap ss <Plug>(easymotion-s2)
+          map <Leader>j <Plug>(easymotion-j)
+          map <Leader>k <Plug>(easymotion-k)
+
+        Plugin 'The-NERD-Commenter'
+          let NERDShutUp=1  "支持单行和多行选择的注释
+          map <c-h> ,c<space>"
+
+        Plugin 'yonchu/accelerated-smooth-scroll'
+
+        Plugin 'Valloric/YouCompleteMe'
+          let g:ycm_autoclose_preview_window_after_completion=1
+          map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+        Plugin 'scrooloose/syntastic'
+          set statusline+=%#warningmsg#
+          set statusline+=%{SyntasticStatuslineFlag()}
+          set statusline+=%*
+          let g:syntastic_always_populate_loc_list = 1
+          let g:syntastic_auto_loc_list = 1
+          let g:syntastic_check_on_open = 1
+          let g:syntastic_check_on_wq = 0
+          let g:syntastic_python_python_exec = '/usr/bin/python'
+
+          Plugin 'Xuyuanp/nerdtree-git-plugin'
+            let g:NERDTreeIndicatorMapCustom = {
+              \ "Modified"  : "✹",
+              \ "Staged"    : "✚",
+              \ "Untracked" : "✭",
+              \ "Renamed"   : "➜",
+              \ "Unmerged"  : "═",
+              \ "Deleted"   : "✖",
+              \ "Dirty"     : "✗",
+              \ "Clean"     : "✔︎",
+              \ "Unknown"   : ""}
+        
+          Plugin 'Raimondi/delimitMate'
+
+          Plugin 'petdance/ack2'
+
+          Plugin 'dyng/ctrlsf.vim'
+
+
+      " }
 
     " }
 

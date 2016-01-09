@@ -26,6 +26,7 @@
           set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
         endif
     " }
+
 " Use before.local config {
     if filereadable(expand("~/.vimrc.before.local"))
       source ~/.vimrc.before.local
@@ -75,14 +76,15 @@
     set iskeyword-=-
 
     " Set backup
-    set backup
-    set backupext=.bak
-    set backupdir=~/.vim/vimbak
-    if has('persistent_undo')
-      set undofile
-      set undolevels=1000
-      set undoreload=1000
-    endif
+    "set backup
+    "set backupext=.bak
+    "set backupdir=~/.vim/backup
+    "if has('persistent_undo')
+    "  set undofile
+    "  set undodir=$HOME/.vim/undo
+    "  set undolevels=1000
+    "  set undoreload=1000
+    "endif
 
     set encoding=utf-8
     set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
@@ -138,7 +140,10 @@
 
     set backspace=indent,eol,start
     set linespace=0
-    set number
+    "set number
+    set relativenumber number
+    autocmd InsertEnter * :set norelativenumber number
+    autocmd InsertLeave * :set relativenumber
     set showmatch
     set incsearch
     set nohlsearch
@@ -149,6 +154,11 @@
     set splitbelow
     set splitright
 
+    " 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
+    if has("autocmd")
+       au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+    endif
+    
 " }
 
 
@@ -164,6 +174,21 @@
     set nojoinspaces
     set splitright
     set splitbelow
+
+    " Enable folding
+    set foldmethod=indent
+    set foldlevel=99
+
+    " for python
+    let python_highlight_all=1
+    au BufNewFile,BufRead *.py
+        \ set tabstop=4 |
+        \ set softtabstop=4 |
+        \ set shiftwidth=4 |
+        \ set textwidth=79 |
+        \ set expandtab |
+        \ set autoindent |
+        \ set fileformat=unix |
 
     " 创建新文件自动添加标题 
     autocmd BufNewfile *.sh,*.py,*.php,*.rb,*.pl exec ":call SetTitle()"
@@ -200,14 +225,6 @@
     endfunction
     autocmd BufNewfile * normal G "自动定位到新文件末行
 
-    " for python
-    let python_highlight_all = 1
-    au FileType python set tabstop=4 
-    au FileType python set softtabstop=4 
-    au FileType python set shiftwidth=4
-    au FileType python set textwidth=79
-    au FileType python set expandtab
-    au FileType python set autoindent
 
 " }
 
@@ -242,6 +259,9 @@
     nnoremap <c-u> bgUee
     inoremap <c-u> <esc>bgUeea
 
+    " Enable folding with the spacebar
+    "nnoremap <space> za
+
     " tab
     nnoremap <c-t> :tabnew<CR>
     inoremap <C-t> <Esc>:tabnew<CR>
@@ -255,10 +275,13 @@
     noremap <leader>8 8gt
     noremap <leader>9 9gt
     noremap <leader>0 :tablast<cr>
-    let g:last_active_tab = 1
+    let g:last_active_tab=1
     nnoremap <silent> <leader>tt :execute 'tabnext ' . g:last_active_tab<cr>
     vnoremap <silent> <leader>tt :execute 'tabnext ' . g:last_active_tab<cr>
     "autocmd TabLeave * let g:last_active_tab = tabpagenr()
+
+    " Disable F1
+    noremap <F1> <Esc>
 
     " <F3> 打开/关闭行号
     function! HideNumber()
@@ -271,26 +294,6 @@
       endif
       set number?
     endfunc
-    nnoremap <F3> :call HideNumber()<CR>
+    nnoremap <F2> :call HideNumber()<CR>
 
-    map <F5> :w<cr>:!python %<cr>
-
-" Plugins {
-
-  " NerdTree {
-    if isdirectory(expand("~/.vim/bundle/nerdtree"))
-      map <F2> :NERDTreeToggle<CR>
-      map <C-e> <plug>NERDTreeTabsToggle<CR>
-      map <leader>e :NERDTreeFind<CR>
-      nmap <leader>nt :NERDTreeFind<CR>
-
-      let NERDTreeShowBookmarks=1
-      let NERDTreeIgnore=['\.py[cd]$','\~$','\.swo$','\.swp$','^\.git$','^\.hg$','^\.svn$','\.bzr$']
-      let NERDTreeChDirMode=0
-      let NERDTreeQuitOnOpen=1
-      let NERDTreeMouseMode=2
-      let NERDTreeShowHidden=1
-      let NERDTreeKeepTreeInNewTab=1
-      let g:nerdtree_tabs_open_on_gui_startup=0
-    endif
-  " }
+    map <F4> :w<cr>:!python %<cr>
