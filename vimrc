@@ -126,8 +126,8 @@
     set tabpagemax=10
     set showmode
 
-    set cursorline
-    set cursorcolumn
+    " set cursorline
+    " set cursorcolumn
 
     highlight clear SignColumn
     highlight clear LineNr
